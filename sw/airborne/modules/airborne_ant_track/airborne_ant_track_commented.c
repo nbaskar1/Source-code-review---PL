@@ -26,9 +26,9 @@
 #include "state.h"
 #include "airborne_ant_track.h"
 
-/*******************************************************************
-;testing comment
-*******************************************************************/
+/*********************************************************************
+; Defining a structure VECTOR to declare the vector directions in different axes
+*********************************************************************/
 typedef struct {
   float fx;
   float fy;
