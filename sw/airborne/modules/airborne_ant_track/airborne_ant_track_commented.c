@@ -26,45 +26,49 @@
 #include "state.h"
 #include "airborne_ant_track.h"
 
-
-
-
+// Defining a structure VECTOR to declare the vector directions in different axes
 typedef struct {
-  float fx;
-  float fy;
-  float fz;
+  float fx;  // X axis
+  float fy;  // Y axis
+  float fz;  // Z axis
 } VECTOR;
 
-// Merge Testing
+// Defining a structure MATRIX containing 3*3 elements
 typedef struct {
-  float fx1; float fx2; float fx3;
-  float fy1; float fy2; float fy3;
-  float fz1; float fz2; float fz3;
+  float fx1; float fx2; float fx3;  // Elements : 1x1, 1x2, 1x3 
+  float fy1; float fy2; float fy3;  // Elements : 2x1, 2x2, 2x3
+  float fz1; float fz2; float fz3;  // Elements : 3x1, 3x2, 3x3
 } MATRIX;
 
 float   airborne_ant_pan;
 static bool ant_pan_positive = 0;
 
 void ant_point(void);
+
+// Declaring a function vSubtractVectors 
+// Alters the first parameter vector variable in the statement when the function is called
 static void vSubtractVectors(VECTOR *svA, VECTOR svB, VECTOR svC);
+
+// Declaring a function vMultiplyMatrixByVector
+// Alters the first parameter vector variable in the statement when the function is called
 static void vMultiplyMatrixByVector(VECTOR *svA, MATRIX smB, VECTOR svC);
 
 /*******************************************************************
 ; function name:   vSubtractVectors
 ; description:     subtracts two vectors a = b - c
-; parameters:
+; parameters:      Vector A, Vector B, Vector C
 ;*******************************************************************/
 static void vSubtractVectors(VECTOR *svA, VECTOR svB, VECTOR svC)
 {
-  svA->fx = svB.fx - svC.fx;
-  svA->fy = svB.fy - svC.fy;
-  svA->fz = svB.fz - svC.fz;
+  svA->fx = svB.fx - svC.fx;  // Vector component subtraction of X-axis
+  svA->fy = svB.fy - svC.fy;  // Vector component subtraction of Y-axis
+  svA->fz = svB.fz - svC.fz;  // Vector component subtraction of Z-axis
 }
 
 /*******************************************************************
 ; function name:   vMultiplyMatrixByVector
 ; description:     multiplies matrix by vector svA = smB * svC
-; parameters:
+; parameters:      Vector A, MATRIX B, VECTOR C
 ;*******************************************************************/
 static void vMultiplyMatrixByVector(VECTOR *svA, MATRIX smB, VECTOR svC)
 {
