@@ -26,15 +26,16 @@
 #include "state.h"
 #include "airborne_ant_track.h"
 
-/*******************************************************************
-;testing comment
-*******************************************************************/
+
+
+
 typedef struct {
   float fx;
   float fy;
   float fz;
 } VECTOR;
 
+// Merge Testing
 typedef struct {
   float fx1; float fx2; float fx3;
   float fy1; float fy2; float fy3;
