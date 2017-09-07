@@ -93,16 +93,28 @@ void airborne_ant_point_periodic(void)
          Home_PositionForPlane2;
 
   static MATRIX smRotation;
+  
+  // Get values of East, North and Up coordinates and assign North value as X axis to the Plane Position
+  // Get values of East, North and Up coordinates and assign East value as Y axis to the Plane Position
+  // Get values of North, East, Altitude and Zone number and assign Altitude value as Z axis to the Plane Position 
+  // stateGetPositionEnu_f is a structure variable defined under the structure EnuCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
+  // stateGetPositionUtm_f is a structure variable defined under the structure UtmCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
+  // pprz_geodectic_float.h is imported into state.h file which is in turn imported here.
+  svPlanePosition.fx = stateGetPositionEnu_f()->y;  
+  svPlanePosition.fy = stateGetPositionEnu_f()->x;  
+  svPlanePosition.fz = stateGetPositionUtm_f()->alt;   
 
-  svPlanePosition.fx = stateGetPositionEnu_f()->y;
-  svPlanePosition.fy = stateGetPositionEnu_f()->x;
-  svPlanePosition.fz = stateGetPositionUtm_f()->alt;
-
+  // Get values of East, North and Up coordinates of the initial Waypoint and assign North value as X axis to the Home Position
+  // WaypointY calls the function waypoint_get_y that returns the North value of ENU coordinates as a float value to  Home_Position.fx 
+  // WaypointX calls the function waypoint_get_y that returns the East value of ENU coordinates as a float value to  Home_Position.fy
+  // waypoints gets the altitude value in float from the structure point defined in common_nav.h under navigation folder.
+  // WaypointY, WaypointX are defined under waypoints.c file under navigation folder
   Home_Position.fx = WaypointY(WP_HOME);
   Home_Position.fy = WaypointX(WP_HOME);
   Home_Position.fz = waypoints[WP_HOME].a;
 
   /* distance between plane and object */
+  // Home_PositionForPlane = Home_Position - svPlanePosition (Vector substraction through call by reference)
   vSubtractVectors(&Home_PositionForPlane, Home_Position, svPlanePosition);
 
   /* yaw */
