@@ -23,14 +23,14 @@
 #if defined(USE_AIRBORNE_ANT_TRACKING) && USE_AIRBORNE_ANT_TRACKING == 1
 #ifndef AIRBORNE_ANT_TRACK_H
 #define AIRBORNE_ANT_TRACK_H
-// airborne_ant_plan is a global variable  which is declared in airborne_ant_track.c file 
-// extern is used to declare a global variable in this file.
+/* airborne_ant_pan is a global variable declared in airborne_ant_track.c which computes the antenna pan angle 
+   based on plane positions with the UAV position. */ 
 extern float airborne_ant_pan;  
 
-// airborne_ant_point_init is a void function which is defined in airborne_ant_track.c file and returns nothing when the airborne is at the initial position.
+// airborne_ant_point_init runs for the antenna to be set in the initial position.
 void airborne_ant_point_init(void);  
 
-// airborne_ant_point_periodic is a function declared in airborne_ant_track.c that computes the angular position of plane.
+// airborne_ant_point_periodic(global function) computes the angular position of plane.
 void airborne_ant_point_periodic(void);
 
 #endif /* AIRBORNE_ANT_TRACK_H */
