@@ -192,6 +192,10 @@ void airborne_ant_point_periodic(void)
   
 
 #ifdef ANT_PAN_NEUTRAL
+  /* 
+     Computes airborne_ant_pan based on the ANT_PAN_NEUTRAL
+     MAX_PPRZ = 9600; MIN_PPRZ = -9600; (Defined under the paparazzi.h file) 
+  */ 
   airborne_ant_pan = airborne_ant_pan - RadOfDeg(ANT_PAN_NEUTRAL);
   if (airborne_ant_pan > 0) {
     airborne_ant_pan_servo = MAX_PPRZ * (airborne_ant_pan / (RadOfDeg(ANT_PAN_MAX - ANT_PAN_NEUTRAL)));
@@ -199,10 +203,17 @@ void airborne_ant_point_periodic(void)
     airborne_ant_pan_servo = MIN_PPRZ * (airborne_ant_pan / (RadOfDeg(ANT_PAN_MIN - ANT_PAN_NEUTRAL)));
   }
 #endif
-
+  /* 
+      Limits the airborne_ant_pan_servo between MAX_PPRZ and MIN_PPRZ
+      (TRIM_PPRZ defined under the paparazzi.h)
+  */
   airborne_ant_pan_servo = TRIM_PPRZ(airborne_ant_pan_servo);
 
 #ifdef COMMAND_ANT_PAN
+  /*
+      Sets the Auto Pilot command based on the airborne_ant_pan_servo
+      imcu_set_command is defined under the inter_mcu.h which computes PPRZ_MUTEX_LOCK and PPRZ_MUTEX_UNLOCK (Defined under pprz_mutex.h) 
+  */
   imcu_set_command(COMMAND_ANT_PAN, airborne_ant_pan_servo);
 #endif
 
