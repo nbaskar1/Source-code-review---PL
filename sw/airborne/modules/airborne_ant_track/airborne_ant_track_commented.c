@@ -94,9 +94,9 @@ void airborne_ant_point_periodic(void)
 
   static MATRIX smRotation;
   
-  // Get values of East, North and Up coordinates and assign North value as X axis to the Plane Position
-  // Get values of East, North and Up coordinates and assign East value as Y axis to the Plane Position
-  // Get values of North, East, Altitude and Zone number and assign Altitude value as Z axis to the Plane Position 
+  // Get values of East, North and Up coordinates and assign North value as svPlanePosition.fx (X axis to the Plane Position)
+  // Get values of East, North and Up coordinates and assign East value as svPlanePosition.fy (Y axis to the Plane Position)
+  // Get values of North, East, Altitude and Zone number and assign Altitude value as svPlanePosition.fz (Z axis to the Plane Position) 
   // stateGetPositionEnu_f is a structure variable defined under the structure EnuCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
   // stateGetPositionUtm_f is a structure variable defined under the structure UtmCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
   // pprz_geodectic_float.h is imported into state.h file which is in turn imported here.
@@ -104,7 +104,9 @@ void airborne_ant_point_periodic(void)
   svPlanePosition.fy = stateGetPositionEnu_f()->x;  
   svPlanePosition.fz = stateGetPositionUtm_f()->alt;   
 
-  // Get values of East, North and Up coordinates of the initial Waypoint and assign North value as X axis to the Home Position
+  // Get values of East, North and Up coordinates of the initial Waypoint and assign North value as Home_Position.fx (X axis to the Home Position)
+  // Get values of East, North and Up coordinates of the initial Waypoint and assign East value as Home_Position.fy (Y axis to the Home Position)
+  // Get values of North, East, Altitude and Zone number of the initial Waypoint and assign Altitude value as Home_Position.fz (Z axis to the Home Position)
   // WaypointY calls the function waypoint_get_y that returns the North value of ENU coordinates as a float value to  Home_Position.fx 
   // WaypointX calls the function waypoint_get_y that returns the East value of ENU coordinates as a float value to  Home_Position.fy
   // waypoints gets the altitude value in float from the structure point defined in common_nav.h under navigation folder.
