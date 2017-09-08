@@ -60,7 +60,7 @@ static void vMultiplyMatrixByVector(VECTOR *svA, MATRIX smB, VECTOR svC);
 ;*******************************************************************/
 static void vSubtractVectors(VECTOR *svA, VECTOR svB, VECTOR svC)
 {
-  svA->fx = svB.fx - svC.fx;  // Vector component subtraction of X-axis
+   svA->fx = svB.fx - svC.fx;  // Vector component subtraction of X-axis
   svA->fy = svB.fy - svC.fy;  // Vector component subtraction of Y-axis
   svA->fz = svB.fz - svC.fz;  // Vector component subtraction of Z-axis
 }
@@ -127,7 +127,7 @@ void airborne_ant_point_periodic(void)
   smRotation.fx1 = cosf(stateGetHorizontalSpeedDir_f());
   smRotation.fx2 = sinf(stateGetHorizontalSpeedDir_f());
   smRotation.fx3 = 0.;
-  smRotation.fy1 = -smRotation.fx2;
+  smRotation.fy1 = -smRotation.fx2;-
   smRotation.fy2 = smRotation.fx1;
   smRotation.fy3 = 0.;
   smRotation.fz1 = 0.;
@@ -170,19 +170,24 @@ void airborne_ant_point_periodic(void)
             -90˚  -> antenna looks backwards
   */
   /* fixed to the plane*/
+  // Computes the angle between X-axis and vector(Home_PositionForPlane2.fx, Home_PositionForPlane2.fy) in radians
   airborne_ant_pan = (float)(atan2(Home_PositionForPlane2.fx, (Home_PositionForPlane2.fy)));
 
   // I need to avoid oscillations around the 180 degree mark.
+  // Checks the condition 0 < airborne_ant_pan <= 175 and sets airborne_pan_positive to 1 
+  // Checks the condition -175 <= airborne_ant_pan < 0 and sets airborne_pan_positive to 0
+   
   if (airborne_ant_pan > 0 && airborne_ant_pan <= RadOfDeg(175)) { ant_pan_positive = 1; }
   if (airborne_ant_pan < 0 && airborne_ant_pan >= RadOfDeg(-175)) { ant_pan_positive = 0; }
 
   if (airborne_ant_pan > RadOfDeg(175) && ant_pan_positive == 0) {
     airborne_ant_pan = RadOfDeg(-180);
-
+  // To avoid the oscillations around 180 degree mark the airborne_ant_pan is set to -180 if it satisfies the above condition.
   } else if (airborne_ant_pan < RadOfDeg(-175) && ant_pan_positive) {
     airborne_ant_pan = RadOfDeg(180);
     ant_pan_positive = 0;
   }
+  // To avoid the oscillations around 180 degree mark the airborne_ant_pan is set to 180 if it satisfies the above condition.
 
 #ifdef ANT_PAN_NEUTRAL
   airborne_ant_pan = airborne_ant_pan - RadOfDeg(ANT_PAN_NEUTRAL);
