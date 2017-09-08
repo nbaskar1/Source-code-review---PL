@@ -99,7 +99,7 @@ void airborne_ant_point_periodic(void)
      Get values of North, East, Altitude and Zone number and assign Altitude value as svPlanePosition.fz (Z axis to the Plane Position) 
      stateGetPositionEnu_f is a structure variable defined under the structure EnuCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
      stateGetPositionUtm_f is a structure variable defined under the structure UtmCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
-   pprz_geodectic_float.h is imported into state.h file which is in turn imported here. */
+     pprz_geodectic_float.h is imported into state.h file which is in turn imported here. */
   svPlanePosition.fx = stateGetPositionEnu_f()->y;  
   svPlanePosition.fy = stateGetPositionEnu_f()->x;  
   svPlanePosition.fz = stateGetPositionUtm_f()->alt;   
