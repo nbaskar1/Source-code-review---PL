@@ -175,8 +175,7 @@ void airborne_ant_point_periodic(void)
 
   // I need to avoid oscillations around the 180 degree mark.
   /* Checks the condition 0 < airborne_ant_pan <= 175 and sets airborne_pan_positive to 1 
-   Checks the condition -175 <= airborne_ant_pan < 0 and sets airborne_pan_positive to 0 */
-   
+   Checks the condition -175 <= airborne_ant_pan < 0 and sets airborne_pan_positive to 0 */   
   if (airborne_ant_pan > 0 && airborne_ant_pan <= RadOfDeg(175)) { ant_pan_positive = 1; }
   if (airborne_ant_pan < 0 && airborne_ant_pan >= RadOfDeg(-175)) { ant_pan_positive = 0; }
   
