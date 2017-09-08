@@ -117,7 +117,11 @@ void airborne_ant_point_periodic(void)
   // Home_PositionForPlane = Home_Position - svPlanePosition (Vector substraction through call by reference)
   vSubtractVectors(&Home_PositionForPlane, Home_Position, svPlanePosition);
 
+  
   /* yaw */
+  // stateGetHorizontalSpeedDir_f is defined in state.h which returns the float value of the direction of horizontal ground speed.
+  // cosf function computes the cosine value of horizontal ground speed and return as float values.
+  // sinf function computes the sine value of horizontal ground speed and return as float values.
   smRotation.fx1 = cosf(stateGetHorizontalSpeedDir_f());
   smRotation.fx2 = sinf(stateGetHorizontalSpeedDir_f());
   smRotation.fx3 = 0.;
@@ -128,6 +132,7 @@ void airborne_ant_point_periodic(void)
   smRotation.fz2 = 0.;
   smRotation.fz3 = 1.;
 
+  // Home_PositionForPlane2 = smRotation * Home_PositionForPlane ( Multiplication of matrix by vector through call by reference)
   vMultiplyMatrixByVector(&Home_PositionForPlane2, smRotation, Home_PositionForPlane);
 
 
