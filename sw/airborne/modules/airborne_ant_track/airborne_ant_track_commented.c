@@ -94,23 +94,23 @@ void airborne_ant_point_periodic(void)
 
   static MATRIX smRotation;
   
-  // Get values of East, North and Up coordinates and assign North value as svPlanePosition.fx (X axis to the Plane Position)
-  // Get values of East, North and Up coordinates and assign East value as svPlanePosition.fy (Y axis to the Plane Position)
-  // Get values of North, East, Altitude and Zone number and assign Altitude value as svPlanePosition.fz (Z axis to the Plane Position) 
-  // stateGetPositionEnu_f is a structure variable defined under the structure EnuCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
-  // stateGetPositionUtm_f is a structure variable defined under the structure UtmCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
-  // pprz_geodectic_float.h is imported into state.h file which is in turn imported here.
+  /* Get values of East, North and Up coordinates and assign North value as svPlanePosition.fx (X axis to the Plane Position)
+     Get values of East, North and Up coordinates and assign East value as svPlanePosition.fy (Y axis to the Plane Position)
+     Get values of North, East, Altitude and Zone number and assign Altitude value as svPlanePosition.fz (Z axis to the Plane Position) 
+     stateGetPositionEnu_f is a structure variable defined under the structure EnuCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
+     stateGetPositionUtm_f is a structure variable defined under the structure UtmCoor_f which is defined in pprz_geodectic_float.h under math subfolder.
+   pprz_geodectic_float.h is imported into state.h file which is in turn imported here. */
   svPlanePosition.fx = stateGetPositionEnu_f()->y;  
   svPlanePosition.fy = stateGetPositionEnu_f()->x;  
   svPlanePosition.fz = stateGetPositionUtm_f()->alt;   
 
-  // Get values of East, North and Up coordinates of the initial Waypoint and assign North value as Home_Position.fx (X axis to the Home Position)
-  // Get values of East, North and Up coordinates of the initial Waypoint and assign East value as Home_Position.fy (Y axis to the Home Position)
-  // Get values of North, East, Altitude and Zone number of the initial Waypoint and assign Altitude value as Home_Position.fz (Z axis to the Home Position)
-  // WaypointY calls the function waypoint_get_y that returns the North value of ENU coordinates as a float value to  Home_Position.fx 
-  // WaypointX calls the function waypoint_get_y that returns the East value of ENU coordinates as a float value to  Home_Position.fy
-  // waypoints gets the altitude value in float from the structure point defined in common_nav.h under navigation folder.
-  // WaypointY, WaypointX are defined under waypoints.c file under navigation folder
+  /* Get values of East, North and Up coordinates of the initial Waypoint and assign North value as Home_Position.fx (X axis to the Home Position)
+     Get values of East, North and Up coordinates of the initial Waypoint and assign East value as Home_Position.fy (Y axis to the Home Position)
+     Get values of North, East, Altitude and Zone number of the initial Waypoint and assign Altitude value as Home_Position.fz (Z axis to the Home Position)
+     WaypointY calls the function waypoint_get_y that returns the North value of ENU coordinates as a float value to  Home_Position.fx 
+     WaypointX calls the function waypoint_get_y that returns the East value of ENU coordinates as a float value to  Home_Position.fy
+     waypoints gets the altitude value in float from the structure point defined in common_nav.h under navigation folder.
+     WaypointY, WaypointX are defined under waypoints.c file under navigation folder */
   Home_Position.fx = WaypointY(WP_HOME);
   Home_Position.fy = WaypointX(WP_HOME);
   Home_Position.fz = waypoints[WP_HOME].a;
@@ -121,9 +121,9 @@ void airborne_ant_point_periodic(void)
 
   
   /* yaw */
-  // stateGetHorizontalSpeedDir_f is defined in state.h which returns the float value of the direction of horizontal ground speed.
-  // cosf function computes the cosine value of horizontal ground speed and return as float values.
-  // sinf function computes the sine value of horizontal ground speed and return as float values.
+  /* stateGetHorizontalSpeedDir_f is defined in state.h which returns the float value of the direction of horizontal ground speed.
+     cosf function computes the cosine value of horizontal ground speed and return as float values.
+     sinf function computes the sine value of horizontal ground speed and return as float values. */
   smRotation.fx1 = cosf(stateGetHorizontalSpeedDir_f());
   smRotation.fx2 = sinf(stateGetHorizontalSpeedDir_f());
   smRotation.fx3 = 0.;
@@ -174,20 +174,23 @@ void airborne_ant_point_periodic(void)
   airborne_ant_pan = (float)(atan2(Home_PositionForPlane2.fx, (Home_PositionForPlane2.fy)));
 
   // I need to avoid oscillations around the 180 degree mark.
-  // Checks the condition 0 < airborne_ant_pan <= 175 and sets airborne_pan_positive to 1 
-  // Checks the condition -175 <= airborne_ant_pan < 0 and sets airborne_pan_positive to 0
+  /* Checks the condition 0 < airborne_ant_pan <= 175 and sets airborne_pan_positive to 1 
+   Checks the condition -175 <= airborne_ant_pan < 0 and sets airborne_pan_positive to 0 */
    
   if (airborne_ant_pan > 0 && airborne_ant_pan <= RadOfDeg(175)) { ant_pan_positive = 1; }
   if (airborne_ant_pan < 0 && airborne_ant_pan >= RadOfDeg(-175)) { ant_pan_positive = 0; }
-
+  
+  // To avoid the oscillations around 180 degree mark the airborne_ant_pan is set to -180 if it satisfies the above condition.
   if (airborne_ant_pan > RadOfDeg(175) && ant_pan_positive == 0) {
     airborne_ant_pan = RadOfDeg(-180);
-  // To avoid the oscillations around 180 degree mark the airborne_ant_pan is set to -180 if it satisfies the above condition.
-  } else if (airborne_ant_pan < RadOfDeg(-175) && ant_pan_positive) {
+  
+  } 
+  // To avoid the oscillations around 180 degree mark the airborne_ant_pan is set to 180 if it satisfies the above condition.
+  else if (airborne_ant_pan < RadOfDeg(-175) && ant_pan_positive) {
     airborne_ant_pan = RadOfDeg(180);
     ant_pan_positive = 0;
   }
-  // To avoid the oscillations around 180 degree mark the airborne_ant_pan is set to 180 if it satisfies the above condition.
+  
 
 #ifdef ANT_PAN_NEUTRAL
   airborne_ant_pan = airborne_ant_pan - RadOfDeg(ANT_PAN_NEUTRAL);
