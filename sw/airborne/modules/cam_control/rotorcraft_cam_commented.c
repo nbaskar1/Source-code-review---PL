@@ -95,6 +95,12 @@ int16_t rotorcraft_cam_tilt_pwm;
 #endif
 
 // Pan definition
+/* 
+   Defining the Maximum and the Minimum for the Rotorcraft Camera pan angle 
+   ROTORCRAFT_CAM_PAN_MIN => 0 
+   ROTORCRAFT_CAM_PAN_MAX => INT32_ANGLE_2_PI => ANGLE_BFP_OF_REAL(2 * pi) => BFP_REAL(2 * pi * 2 ^ 12)
+   ANGLE_BFP_OF_REAL and BFP_REAL are defined under paparazzi_algebra_int.h
+*/ 
 int16_t rotorcraft_cam_pan;
 #define ROTORCRAFT_CAM_PAN_MIN 0
 #define ROTORCRAFT_CAM_PAN_MAX INT32_ANGLE_2_PI
