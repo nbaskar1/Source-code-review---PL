@@ -75,9 +75,19 @@ uint8_t rotorcraft_cam_mode;
 int16_t rotorcraft_cam_tilt;
 int16_t rotorcraft_cam_tilt_pwm;
 #if ROTORCRAFT_CAM_USE_TILT
+
+/* Compute the Rotor craft camera value of Neutral, Minimum or Maximum positions based on 
+   Rotor Craft Tilt Servo angle and the corresponding Neutral, Minimum and Maximum values
+*/
 #define ROTORCRAFT_CAM_TILT_NEUTRAL SERVO_PARAM(ROTORCRAFT_CAM_TILT_SERVO, NEUTRAL)
 #define ROTORCRAFT_CAM_TILT_MIN SERVO_PARAM(ROTORCRAFT_CAM_TILT_SERVO, MIN)
 #define ROTORCRAFT_CAM_TILT_MAX SERVO_PARAM(ROTORCRAFT_CAM_TILT_SERVO, MAX)
+
+/*
+  Compute the Difference in tilt by calculating the range between Minimum and Maximum Rotor Cam tilt value
+  CT_MIN is defined as the minimum value between the Camera Minimum and Maximum tilt angle
+  CT_MAX is defined as the maximum value between the Camera Minimum and Maximum tilt angle
+*/
 #define D_TILT (ROTORCRAFT_CAM_TILT_MAX - ROTORCRAFT_CAM_TILT_MIN)
 #define CT_MIN Min(CAM_TA_MIN, CAM_TA_MAX)
 #define CT_MAX Max(CAM_TA_MIN, CAM_TA_MAX)
