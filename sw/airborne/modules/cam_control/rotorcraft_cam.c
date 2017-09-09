@@ -76,7 +76,8 @@ int16_t rotorcraft_cam_tilt;
 int16_t rotorcraft_cam_tilt_pwm;
 #if ROTORCRAFT_CAM_USE_TILT
 
-/* Compute the Rotor craft camera value of Neutral, Minimum or Maximum positions based on 
+/* 
+   Compute the Rotor craft camera value of Neutral, Minimum or Maximum positions based on 
    Rotor Craft Tilt Servo angle and the corresponding Neutral, Minimum and Maximum values
 */
 #define ROTORCRAFT_CAM_TILT_NEUTRAL SERVO_PARAM(ROTORCRAFT_CAM_TILT_SERVO, NEUTRAL)
