@@ -110,10 +110,12 @@ static void send_cam(struct transport_tx *trans, struct link_device *dev)
   pprz_msg_send_ROTORCRAFT_CAM(trans, dev, AC_ID,
                                &rotorcraft_cam_tilt, &rotorcraft_cam_pan);
 }
-
+  
+// Switches the camera ON/ OFF depending on the MODE input
 void rotorcraft_cam_set_mode(uint8_t mode)
 {
   rotorcraft_cam_mode = mode;
+// ROTORCRAFT_CAM_SWITCH_GPIO is set/ cleared based on rotorcraft_cam_mode   
 #ifdef ROTORCRAFT_CAM_SWITCH_GPIO
   if (rotorcraft_cam_mode == ROTORCRAFT_CAM_MODE_NONE) {
     ROTORCRAFT_CAM_OFF(ROTORCRAFT_CAM_SWITCH_GPIO);
@@ -122,13 +124,15 @@ void rotorcraft_cam_set_mode(uint8_t mode)
   }
 #endif
 }
-
+// Rotorcraft Camera is switched ON/ OFF based on ROTORCRAFT_CAM_SWITCH_GPIO
 void rotorcraft_cam_init(void)
-{
+{ 
 #ifdef ROTORCRAFT_CAM_SWITCH_GPIO
   gpio_setup_output(ROTORCRAFT_CAM_SWITCH_GPIO);
 #endif
+// The mode of the Rotorcraft Camera is set based on the value of ROTORCRAFT_CAM_DEFAULT_MODE
   rotorcraft_cam_set_mode(ROTORCRAFT_CAM_DEFAULT_MODE);
+//     
 #if ROTORCRAFT_CAM_USE_TILT
   rotorcraft_cam_tilt_pwm = ROTORCRAFT_CAM_TILT_NEUTRAL;
   ActuatorSet(ROTORCRAFT_CAM_TILT_SERVO, rotorcraft_cam_tilt_pwm);
@@ -137,13 +141,13 @@ void rotorcraft_cam_init(void)
 #endif
   rotorcraft_cam_tilt = 0;
   rotorcraft_cam_pan = 0;
-
+ 
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_ROTORCRAFT_CAM, send_cam);
 }
 
 void rotorcraft_cam_periodic(void)
 {
-
+ 
   switch (rotorcraft_cam_mode) {
     case ROTORCRAFT_CAM_MODE_NONE:
 #if ROTORCRAFT_CAM_USE_TILT
@@ -153,7 +157,7 @@ void rotorcraft_cam_periodic(void)
       rotorcraft_cam_pan = stateGetNedToBodyEulers_i()->psi;
 #endif
       break;
-    case ROTORCRAFT_CAM_MODE_MANUAL:
+    case ROTORCRAFT_CAM_MODE_MANUAL:  
       // nothing to do here, just apply tilt pwm at the end
       break;
     case ROTORCRAFT_CAM_MODE_HEADING:
