@@ -130,44 +130,69 @@ void rotorcraft_cam_init(void)
 #ifdef ROTORCRAFT_CAM_SWITCH_GPIO
   gpio_setup_output(ROTORCRAFT_CAM_SWITCH_GPIO);
 #endif
+   
 // The mode of the Rotorcraft Camera is set based on the value of ROTORCRAFT_CAM_DEFAULT_MODE
   rotorcraft_cam_set_mode(ROTORCRAFT_CAM_DEFAULT_MODE);
-//     
+   
+//  If ROTORCRAFT_CAM_USE_TILT is set then the Actuator will be set based on SERVO and the Camera Tilt Angle Neutral Value   
 #if ROTORCRAFT_CAM_USE_TILT
   rotorcraft_cam_tilt_pwm = ROTORCRAFT_CAM_TILT_NEUTRAL;
   ActuatorSet(ROTORCRAFT_CAM_TILT_SERVO, rotorcraft_cam_tilt_pwm);
-#else
+// If the above condition is not satisfied then 1500 is set to rotorcraft_cam_tilt_pwm    
+#else  
   rotorcraft_cam_tilt_pwm = 1500;
 #endif
+   
+// Camera tilt angle and Camera Pan angle are set to 0
   rotorcraft_cam_tilt = 0;
   rotorcraft_cam_pan = 0;
- 
+   
+/*
+  Periodic Telemetry messages are registered based on the number of messages and the call back from the register 
+  The function register_periodic_telemetry is defined in telemetry.c
+*/
   register_periodic_telemetry(DefaultPeriodic, PPRZ_MSG_ID_ROTORCRAFT_CAM, send_cam);
 }
 
 void rotorcraft_cam_periodic(void)
 {
- 
+ // Computing rotorcraft_cam_tilt_pwm based on the Rotor Craft Camera mode 
   switch (rotorcraft_cam_mode) {
+    //  Mode => None ; rotorcraft_cam_tilt_pwm is set to Camera Tilt Angle Neutral value  
     case ROTORCRAFT_CAM_MODE_NONE:
 #if ROTORCRAFT_CAM_USE_TILT
       rotorcraft_cam_tilt_pwm = ROTORCRAFT_CAM_TILT_NEUTRAL;
 #endif
+    /*  
+      rotorcraft_cam_pan is set to psi value based on orientation of the Eulers value
+      stateGetNedToBodyEulers_i is defined in state.h    
+    */   
 #if ROTORCRAFT_CAM_USE_PAN
       rotorcraft_cam_pan = stateGetNedToBodyEulers_i()->psi;
 #endif
       break;
+    //  Mode => Manual
     case ROTORCRAFT_CAM_MODE_MANUAL:  
       // nothing to do here, just apply tilt pwm at the end
       break;
+    //  Mode => Heading    
     case ROTORCRAFT_CAM_MODE_HEADING:
 #if ROTORCRAFT_CAM_USE_TILT_ANGLES
+    /*  
+        The camera tilt angle, CT_MIN and CT_MAX  is bound to the UAV 
+        rotorcraft_cam_tilt_pwm is calculated based on the pre-processors defined in the top of this file
+    */   
       Bound(rotorcraft_cam_tilt, CT_MIN, CT_MAX);
       rotorcraft_cam_tilt_pwm = ROTORCRAFT_CAM_TILT_MIN + D_TILT * (rotorcraft_cam_tilt - CAM_TA_MIN) /
                                 (CAM_TA_MAX - CAM_TA_MIN);
 #endif
+ /*
+    INT32_COURSE_NORMALIZE will normalise the value between the range 0 - INT32_ANGLE_2_PI
+    INT32_ANGLE_2_PI = 2 * pi * (1 << 12); INT32_COURSE_NORMALIZE is defined in pprz_algebra_int.h
+ */    
 #if ROTORCRAFT_CAM_USE_PAN
       INT32_COURSE_NORMALIZE(rotorcraft_cam_pan);
+      //  The value of Rotor Craft Camera Pan Angle is set to the Navigation Heading defined in file navigation.c      
       nav_heading = rotorcraft_cam_pan;
 #endif
       break;
