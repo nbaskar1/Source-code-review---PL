@@ -134,7 +134,7 @@ void rotorcraft_cam_init(void)
 // The mode of the Rotorcraft Camera is set based on the value of ROTORCRAFT_CAM_DEFAULT_MODE
   rotorcraft_cam_set_mode(ROTORCRAFT_CAM_DEFAULT_MODE);
    
-//  If ROTORCRAFT_CAM_USE_TILT is set then the Actuator will be set based on SERVO and the Camera Tilt Angle Neutral Value   
+//  If ROTORCRAFT_CAM_USE_TILT is set, then the Actuator will be set, based on SERVO and the Camera Tilt Angle Neutral Value   
 #if ROTORCRAFT_CAM_USE_TILT
   rotorcraft_cam_tilt_pwm = ROTORCRAFT_CAM_TILT_NEUTRAL;
   ActuatorSet(ROTORCRAFT_CAM_TILT_SERVO, rotorcraft_cam_tilt_pwm);
@@ -192,23 +192,51 @@ void rotorcraft_cam_periodic(void)
  */    
 #if ROTORCRAFT_CAM_USE_PAN
       INT32_COURSE_NORMALIZE(rotorcraft_cam_pan);
-      //  The value of Rotor Craft Camera Pan Angle is set to the Navigation Heading defined in file navigation.c      
+      //  Rotor Craft Camera Pan Angle is set to the Navigation Heading defined in file navigation.c      
       nav_heading = rotorcraft_cam_pan;
 #endif
       break;
+    // Mode => WP
     case ROTORCRAFT_CAM_MODE_WP:
 #ifdef ROTORCRAFT_CAM_TRACK_WP
       {
+         
+        /* 
+           Defining a structure variable diff which contains two 32 bit integer values as a vector
+           Int32Vect2 is defined in pprz_algebra_int.h
+        */ 
         struct Int32Vect2 diff;
+         
+        /* 
+           Compute the Vector difference between Waypoints(East, North and Altitude defined in common_nav.h) &
+           stateGetPositionEnu_i(East, North and Up Directions defined as a integer in state.h) and the result
+           is stored in the variable diff
+        */
         VECT2_DIFF(diff, waypoints[ROTORCRAFT_CAM_TRACK_WP], *stateGetPositionEnu_i());
+        
+        // The values of diff variable is right shifted by INT32_POS_FRAC => 8 (Function is defined under pprz_algebra_int.h)
         INT32_VECT2_RSHIFT(diff, diff, INT32_POS_FRAC);
+         
+        /* 
+           Computing the fixed point arithmetic using int32_atan2 based on the x and y values of diff variable.
+           int32_atan2 is defined under pprz_trig_int.c
+           Rotor Craft Camera Pan angle is set to Navigation Heading defined in file navigation.c
+        */ 
         rotorcraft_cam_pan = int32_atan2(diff.x, diff.y);
         nav_heading = rotorcraft_cam_pan;
 #if ROTORCRAFT_CAM_USE_TILT_ANGLES
         int32_t dist, height;
+        /* 
+           Distance => Vector value of diff variable; 
+           height => (Waypoints(Altitude) - ENU Coordinates(Altitude)) right shifted by 8
+        */
         dist = INT32_VECT2_NORM(diff);
         height = (waypoints[ROTORCRAFT_CAM_TRACK_WP].z - stateGetPositionEnu_i()->z) >> INT32_POS_FRAC;
         rotorcraft_cam_tilt = int32_atan2(height, dist);
+        /*  
+          The camera tilt angle, CAM_TA_MIN and CAM_TA_MAX  is bound to the UAV 
+          rotorcraft_cam_tilt_pwm is calculated based on the pre-processors defined in the top of this file
+        */ 
         Bound(rotorcraft_cam_tilt, CAM_TA_MIN, CAM_TA_MAX);
         rotorcraft_cam_tilt_pwm = ROTORCRAFT_CAM_TILT_MIN + D_TILT * (rotorcraft_cam_tilt - CAM_TA_MIN) /
                                   (CAM_TA_MAX - CAM_TA_MIN);
@@ -220,6 +248,7 @@ void rotorcraft_cam_periodic(void)
       break;
   }
 #if ROTORCRAFT_CAM_USE_TILT
+  // If ROTORCRAFT_CAM_USE_TILT is set, then the Actuator will be set, based on SERVO and the Camera Tilt PWM Value
   ActuatorSet(ROTORCRAFT_CAM_TILT_SERVO, rotorcraft_cam_tilt_pwm);
 #endif
 }
