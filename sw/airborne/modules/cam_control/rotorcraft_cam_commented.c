@@ -74,6 +74,8 @@ uint8_t rotorcraft_cam_mode;
 // Tilt definition
 int16_t rotorcraft_cam_tilt;
 int16_t rotorcraft_cam_tilt_pwm;
+
+// ROTORCRAFT_CAM_USE_TILT value is either set to either 0/1 based on the ROTORCRAFT_CAM_TILT_SERVO value defined in rotorcraft_cam.h
 #if ROTORCRAFT_CAM_USE_TILT
 
 /* 
