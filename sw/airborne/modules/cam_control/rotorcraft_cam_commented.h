@@ -37,14 +37,17 @@
  * and disable it when in NONE mode
  */
 
+// If ROTORCRAFT_CAM_H is not defined the entire rotorcraft_cam.h is executed else the complete execution lines are skipped.
 #ifndef ROTORCRAFT_CAM_H
 #define ROTORCRAFT_CAM_H
 
+// Include necessary header files for the different variables or functions mentioned in the program.
 #include "std.h"
 #include "generated/airframe.h"
 #include "math/pprz_algebra_int.h"
 #include "mcu_periph/gpio.h"
 
+// Defining the mode number for the different modes for the Rotor Craft Camera.
 #define ROTORCRAFT_CAM_MODE_NONE     0
 #define ROTORCRAFT_CAM_MODE_MANUAL   1
 #define ROTORCRAFT_CAM_MODE_HEADING  2
@@ -58,6 +61,8 @@
 /** Cam tilt control.
  * By default use tilt control if a servo is assigned
  */
+
+// ROTORCRAFT_CAM_USE_TILT is set to 1 if ROTORCRAFT_CAM_TILT_SERVO is defined else ROTORCRAFT_CAM_USE_TILT is set to 0
 #ifdef ROTORCRAFT_CAM_TILT_SERVO
 #define ROTORCRAFT_CAM_USE_TILT 1
 #else
@@ -66,6 +71,13 @@
 
 /** Use angles for tilt in HEADING and WP modes.
  */
+
+/*
+    If ROTORCRAFT_CAM_TILT_ANGLE_MIN, ROTORCRAFT_CAM_TILT_ANGLE_MAX and ROTORCRAFT_CAM_USE_TILT are defined:
+    CAM_TA_MIN => ROTORCRAFT_CAM_TILT_ANGLE_MIN * (1 << 12) defined in pprz_algebra_int.h
+    CAM_TA_MAX => ROTORCRAFT_CAM_TILT_ANGLE_MAX * (1 << 12) defined in pprz_algebra_int.h
+    ROTORCRAFT_CAM_USE_TILT_ANGLES => 1
+*/
 #if defined ROTORCRAFT_CAM_TILT_ANGLE_MIN && defined ROTORCRAFT_CAM_TILT_ANGLE_MAX && defined ROTORCRAFT_CAM_USE_TILT
 #define CAM_TA_MIN ANGLE_BFP_OF_REAL(ROTORCRAFT_CAM_TILT_ANGLE_MIN)
 #define CAM_TA_MAX ANGLE_BFP_OF_REAL(ROTORCRAFT_CAM_TILT_ANGLE_MAX)
@@ -75,6 +87,7 @@
 /** Cam pan control.
  * By default use pan control (heading)
  */
+// If ROTORCRAFT_CAM_USE_PAN is not defined previously it is set to a value of 1
 #ifndef ROTORCRAFT_CAM_USE_PAN
 #define ROTORCRAFT_CAM_USE_PAN 1
 #endif
@@ -88,12 +101,23 @@
 #endif
 #endif
 
+/*
+   Global Variables "rotorcraft_cam_mode", "rotorcraft_cam_tilt", "rotorcraft_cam_pan" & "rotorcraft_cam_tilt_pwm"
+   are defined and denotes the values of the camera mode, camera tilt angle, camera pan angle and the rotorcraft
+   camera tilt pwm value. All 4 values are used in rotorcraft_cam.c
+*/
 extern uint8_t rotorcraft_cam_mode;
 
 extern int16_t rotorcraft_cam_tilt;
 extern int16_t rotorcraft_cam_pan;
 extern int16_t rotorcraft_cam_tilt_pwm;
 
+/*
+    Global Functions "rotorcraft_cam_init", "rotorcraft_cam_periodic" & "rotorcraft_cam_set_mode" are defined and the 
+    purpose of the function are to set the camera during initial stage, change the camera angle periodically based on 
+    camera mode, and setting the mode of the camera to the hardware based on the mode number respectively.
+    All 3 functions are used in rotorcraft_cam.c
+*/
 extern void rotorcraft_cam_init(void);
 extern void rotorcraft_cam_periodic(void);
 extern void rotorcraft_cam_set_mode(uint8_t mode);
@@ -109,9 +133,13 @@ extern void rotorcraft_cam_set_mode(uint8_t mode);
  * camera tilt and pan are incremented by STICK_TILT_INC and STICK_PAN_INC
  * when maximum command is received from the stick
  */
+
+// If ROTORCRAFT_CAM_STICK_TILT_INC is not defined then it is set to Radians equivalence of 10 Degrees.
 #ifndef ROTORCRAFT_CAM_STICK_TILT_INC
 #define ROTORCRAFT_CAM_STICK_TILT_INC RadOfDeg(10.)
 #endif
+
+// If ROTORCRAFT_CAM_STICK_PAN_INC is not defined then it is set to Radians equivalence of 20 Degrees.
 #ifndef ROTORCRAFT_CAM_STICK_PAN_INC
 #define ROTORCRAFT_CAM_STICK_PAN_INC RadOfDeg(20.)
 #endif
