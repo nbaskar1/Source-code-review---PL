@@ -88,8 +88,10 @@ int16_t rotorcraft_cam_tilt_pwm;
 
 /*
   Compute the Difference in tilt by calculating the range between Minimum and Maximum Rotor Cam tilt value
-  CT_MIN is defined as the minimum value between the Camera Minimum and Maximum tilt angle
-  CT_MAX is defined as the maximum value between the Camera Minimum and Maximum tilt angle
+  CAM_TA_MIN => ROTORCRAFT_CAM_TILT_ANGLE_MIN * (1 << 12) defined in rotorcraft_cam.h
+  CAM_TA_MAX => ROTORCRAFT_CAM_TILT_ANGLE_MAX * (1 << 12) defined in rotorcraft_cam.h
+  CT_MIN => Minimum value between the Camera Minimum and Maximum tilt angle
+  CT_MAX => Maximum value between the Camera Minimum and Maximum tilt angle
 */
 #define D_TILT (ROTORCRAFT_CAM_TILT_MAX - ROTORCRAFT_CAM_TILT_MIN)
 #define CT_MIN Min(CAM_TA_MIN, CAM_TA_MAX)
