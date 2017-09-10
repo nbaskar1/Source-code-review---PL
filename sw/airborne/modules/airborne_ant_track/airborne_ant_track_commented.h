@@ -25,8 +25,10 @@
 #ifndef AIRBORNE_ANT_TRACK_H
 #define AIRBORNE_ANT_TRACK_H
 
-/* "airborne_ant_pan" is a global variable declared in airborne_ant_track.c which computes the antenna pan angle 
-   based on plane positions with the UAV position. */ 
+/* 
+   "airborne_ant_pan" is a global variable declared in airborne_ant_track.c which computes the antenna pan angle 
+   based on plane positions with the UAV position. 
+*/ 
 extern float airborne_ant_pan;  
 
 // "airborne_ant_point_init" (global function) runs for the antenna to be set in the initial position.
