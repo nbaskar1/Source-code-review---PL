@@ -144,6 +144,12 @@ extern void rotorcraft_cam_set_mode(uint8_t mode);
 #define ROTORCRAFT_CAM_STICK_PAN_INC RadOfDeg(20.)
 #endif
 
+/* 
+   dl_buffer contains 128 bit size message (Defined as a global variable in datalink.h)
+   rotorcraft_cam_tilt => rotorcraft_cam_tilt + (ROTORCRAFT_CAM_STICK_TILT_INC * (1 << 12) / 127) * DL_ROTORCRAFT_CAM_STICK_tilt(_dl_buffer)
+   rotorcraft_cam_pan => rotorcraft_cam_pan + (ROTORCRAFT_CAM_STICK_PAN_INC * (1 << 12) / 127) * DL_ROTORCRAFT_CAM_STICK_pan(_dl_buffer)
+   INT32_COURSE_NORMALIZE => Normalize the value "rotorcraft_cam_pan" between the range 0 to (2 * pi * (1 << 12))
+*/
 #define ROTORCRAFT_CAM_STICK_PARSE(_dl_buffer) { \
     rotorcraft_cam_tilt += (int16_t)((ANGLE_BFP_OF_REAL(ROTORCRAFT_CAM_STICK_TILT_INC)/127.)*(float)DL_ROTORCRAFT_CAM_STICK_tilt(_dl_buffer)); \
     rotorcraft_cam_pan += (int16_t)((ANGLE_BFP_OF_REAL(ROTORCRAFT_CAM_STICK_PAN_INC)/127.)*(float)DL_ROTORCRAFT_CAM_STICK_pan(dl_buffer)); \
