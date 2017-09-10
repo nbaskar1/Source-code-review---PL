@@ -37,7 +37,7 @@
  * and disable it when in NONE mode
  */
 
-// If ROTORCRAFT_CAM_H is not defined the entire rotorcraft_cam.h is executed else the complete execution lines are skipped.
+// If ROTORCRAFT_CAM_H is not defined the file rotorcraft_cam.h is executed else the complete execution lines are skipped.
 #ifndef ROTORCRAFT_CAM_H
 #define ROTORCRAFT_CAM_H
 
