@@ -67,12 +67,15 @@
 #define ROTORCRAFT_CAM_OFF gpio_clear
 #endif
 
+// rotorcraft_cam_mode  holds the mode number in which camera should operate
 uint8_t rotorcraft_cam_mode;
 
+// Defining the Macros
 #define _SERVO_PARAM(_s,_p) SERVO_ ## _s ## _ ## _p
 #define SERVO_PARAM(_s,_p) _SERVO_PARAM(_s,_p)
 
 // Tilt definition
+// Rotorcraft_cam_tilt & rotorcraft_cam_tilt_pwm holds the values of camera tilt angle.
 int16_t rotorcraft_cam_tilt;
 int16_t rotorcraft_cam_tilt_pwm;
 
@@ -101,6 +104,7 @@ int16_t rotorcraft_cam_tilt_pwm;
 
 // Pan definition
 /* 
+   rotorcraft_cam_pan holds the rotorcraft camera pan angles
    Defining the Maximum and the Minimum for the Rotorcraft Camera pan angle 
    ROTORCRAFT_CAM_PAN_MIN => 0 
    ROTORCRAFT_CAM_PAN_MAX => 2 * pi * (1 << 12) defined in paparazzi_algebra_int.h
