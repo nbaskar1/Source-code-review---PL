@@ -193,12 +193,12 @@ void airborne_ant_point_periodic(void)
   if (airborne_ant_pan > 0 && airborne_ant_pan <= RadOfDeg(175)) { ant_pan_positive = 1; }
   if (airborne_ant_pan < 0 && airborne_ant_pan >= RadOfDeg(-175)) { ant_pan_positive = 0; }
   
-  // To avoid the oscillations around 180 degree mark the "airborne_ant_pan" is set to -180 if it satisfies the above condition.
+  // To avoid the oscillations around 180 degree mark the "airborne_ant_pan" is set to -180 if it satisfies the below condition.
   if (airborne_ant_pan > RadOfDeg(175) && ant_pan_positive == 0) {
     airborne_ant_pan = RadOfDeg(-180);
   
   } 
-  // To avoid the oscillations around 180 degree mark the "airborne_ant_pan" is set to 180 if it satisfies the above condition.
+  // To avoid the oscillations around 180 degree mark the "airborne_ant_pan" is set to 180 if it satisfies the below condition.
   else if (airborne_ant_pan < RadOfDeg(-175) && ant_pan_positive) {
     airborne_ant_pan = RadOfDeg(180);
     ant_pan_positive = 0;
@@ -218,7 +218,7 @@ void airborne_ant_point_periodic(void)
   }
 #endif
   /* 
-      Limits the "airborne_ant_pan_servo" between MAX_PPRZ and MIN_PPRZ
+      Limits the "airborne_ant_pan_servo" between MAX_PPRZ(9600) and MIN_PPRZ(-9600)
       (TRIM_PPRZ defined under paparazzi.h)
   */
   airborne_ant_pan_servo = TRIM_PPRZ(airborne_ant_pan_servo);
