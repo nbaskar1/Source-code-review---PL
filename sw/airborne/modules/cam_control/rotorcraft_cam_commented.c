@@ -103,7 +103,7 @@ int16_t rotorcraft_cam_tilt_pwm;
 /* 
    Defining the Maximum and the Minimum for the Rotorcraft Camera pan angle 
    ROTORCRAFT_CAM_PAN_MIN => 0 
-   ROTORCRAFT_CAM_PAN_MAX => 2 * pi * (1 << 12) defined in paparazzi_algebra_int.h
+   ROTORCRAFT_CAM_PAN_MAX => 2 * pi * (1 << 12) defined in pprz_algebra_int.h
 */ 
 int16_t rotorcraft_cam_pan;
 #define ROTORCRAFT_CAM_PAN_MIN 0
@@ -202,7 +202,7 @@ void rotorcraft_cam_periodic(void)
       //  Rotor Craft Camera Pan Angle is set to the Navigation Heading defined in file navigation.c      
       nav_heading = rotorcraft_cam_pan;
 #endif
-      break;
+      break;  
     // Mode => WP
     case ROTORCRAFT_CAM_MODE_WP:
 #ifdef ROTORCRAFT_CAM_TRACK_WP
