@@ -27,7 +27,7 @@
 
 /* 
    "airborne_ant_pan" is a global variable declared in airborne_ant_track.c which computes the antenna pan angle 
-   based on plane positions with the UAV position. 
+   based on plane positions with the home position. 
 */ 
 extern float airborne_ant_pan;  
 
